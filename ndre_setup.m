@@ -6,10 +6,6 @@ function ps=ndre_setup(p)
 %   "multistate"  Lemma (scaling) with u = e and v = K\e, where
 %                 K = diag([k^-;k^+]) - U*V' has rank 4r; nu from the pencil
 %                 (G,J), G = Khat + Khat', by eigs with solves with G.
-%   "li2021"      sparse K: v = K\e, u = K'\e, Pi = diag(u./v); nu from the
-%                 pencil with a sparse Cholesky factorization of G;
-%   "convdiff"    accretive without scaling (Pi = I); G is block diagonal
-%                 minus a term of rank 8.
 % A problem that is already scaled is returned unchanged.
 if isfield(p,'scaling'), ps=p; return; end
 switch string(p.family)
@@ -30,24 +26,6 @@ switch string(p.family)
         d=sqrt([piD;piA]); Uh=d.*U; Vh=V./d;      % Khat = diag(dg) - Uh*Vh'
         Gsolve=@(x)lowrank_solve(2*dg,[Uh,Vh],[Vh,Uh],x);
         ps.nu=pencil_nu(Gsolve,n,n);
-    case "li2021"
-        m=p.mats; n=p.n; q=p.p; Q=sparse(p.F)*sparse(p.G)';
-        K=[m.D,-m.S;-Q,m.A]; e=ones(n+q,1);
-        v=K\e; u=K'\e;
-        assert(all(v>0) && all(u>0),'setup:scaling','Scaling vectors are not positive.');
-        s=u./v; piD=s(1:q); piA=s(q+1:end);
-        ps=scale_problem(p,piA,piD);
-        d=sqrt(s); Kh=spdiags(d,0,n+q,n+q)*K*spdiags(1./d,0,n+q,n+q);
-        dG=decomposition(Kh+Kh','chol');
-        ps.nu=pencil_nu(@(x)dG\x,q,n);
-    case "convdiff"
-        m=p.mats; n=p.n; q=p.p;
-        ps=scale_problem(p,ones(n,1),ones(q,1));
-        dB=decomposition(blkdiag(m.D+m.D',m.A+m.A'),'chol');
-        Z=zeros(q,size(m.L,2)); Zn=zeros(n,size(m.L,2));
-        U=[m.L,Z;Zn,m.R]; V=[Z,m.L;m.R,Zn];           % G = B - U*V'
-        BU=dB\U; core=eye(size(U,2))-V'*BU;
-        ps.nu=pencil_nu(@(x)woodbury(dB,BU,core,V,x),q,n);
     otherwise
         error('setup:family','No scaling implemented for %s.',p.family);
 end
@@ -64,8 +42,4 @@ J=[ones(p,1);-ones(n,1)];
 opts=struct('tol',1e-12,'maxit',500,'issym',false);
 theta=eigs(@(x)Gsolve(J.*x),p+n,2,'largestabs',opts);
 nu=1/(2*max(abs(theta)));
-end
-
-function x=woodbury(dB,BU,core,V,b)
-z=dB\b; x=z+BU*(core\(V'*z));
 end

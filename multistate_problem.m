@@ -1,4 +1,4 @@
-function [prob,op]=multistate_problem(n,r,gamma,beta)
+function prob=multistate_problem(n,r,gamma,beta)
 %MULTISTATE_PROBLEM One-dimensional multistate transport model of Li, Chu,
 % Juang and Lin (IMA J. Numer. Anal. 31, 2011), eq. (1.8):
 %   R' = B^- - R F^- - F^+ R + R B^+ R,  R(0) = 0,
@@ -10,8 +10,7 @@ function [prob,op]=multistate_problem(n,r,gamma,beta)
 % bumps (backward ones shifted to lower energies), membership weights are
 % the same bumps normalized per incoming state. In the notation
 % X' = -A X - X D + X S X + Q of this paper: A = F^+, D = F^-, S = B^+,
-% Q = B^- = B1*(D^- B2)'. op is the same equation in the notation of
-% li2021_lowrank_exp: X' = Al X + X Dl + C1t*C2t' - X B1l*B2l' X.
+% Q = B^- = B1*(D^- B2)'. With ndre_scaled the scaled problem is returned.
 if nargin<2 || isempty(r), r=10; end
 if nargin<3 || isempty(gamma), gamma=0.9999; end
 if nargin<4 || isempty(beta), beta=0.1; end
@@ -33,12 +32,7 @@ prob=struct('n',n,'p',n,'F',B1,'G',G,'normQ',sqrt(sum(sum((B1'*B1).*(G'*G)))), .
 prob.rightBasisApply=prob.DTapply; prob.rightBasisSolve=prob.DTsolve;
 prob.family="multistate"; prob.seed=NaN; prob.parameter=[gamma,beta,r];
 prob.factors=struct('kp',kp,'km',km,'F1',F1,'F2',F2,'B1',B1,'B2',B2);
-% Li--Zhang--Liu notation: Al = -A, Dl = -D, -B1l*B2l' = S.
-op=struct('Aop',@(V)-prob.Aapply(V),'ATop',@(V)-(kp.*V-DF2*(F1'*V)), ...
-    'Dop',@(V)-prob.Dapply(V),'DTop',@(V)-prob.DTapply(V), ...
-    'C1t',B1,'C2t',G,'B1',-B1,'B2',DB2, ...
-    'normA',max(kp)*(1+gamma),'normD',max(km)*(1+gamma));
-if ndre_scaled, prob=ndre_setup(prob); op=scale_ops(op,prob.scaling); end
+if ndre_scaled, prob=ndre_setup(prob); end
 end
 
 function X=smw(X,d,U,V)

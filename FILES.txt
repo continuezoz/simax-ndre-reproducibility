@@ -1,29 +1,25 @@
-File index for SIMAX reproducibility package v1.0.0
+File index for SIMAX reproducibility package v1.0.1
 
 Paper: Well-Posedness and A Posteriori Error Bounds for Projected Nonsymmetric Differential Riccati Equations
 Authors: Ze Zhang and Jianzhou Liu
 
 MATLAB source files:
 error_estimate.m : Evaluate the projection-error estimate.
-export_simax_tables.m : Export Tables 2--6 as CSV and LaTeX.
+export_simax_tables.m : Export Tables 1--5 as CSV and LaTeX.
 gauss_legendre_matlab.m : Supporting numerical routine; see the function header.
-increment_defects.m : Supporting numerical routine; see the function header.
 incremental_centered_nodes.m : Direct and composed increment evaluation.
-li2021_lowrank_exp.m : Supporting numerical routine; see the function header.
 load_gauss_legendre_matlab.m : Supporting numerical routine; see the function header.
-mdm_nodes.m : Supporting numerical routine; see the function header.
 multistate_problem.m : Supporting numerical routine; see the function header.
 ndre_scaled.m : Supporting numerical routine; see the function header.
 ndre_setup.m : Diagonal scaling and contraction-rate computation.
-nla_core.m : Model constructors, projection, centered preparation, baselines and reference-flow kernels.
+nla_core.m : Transport model, projection, centered preparation, EBA--BDF1 baseline and scaled Radon reference flow.
 plot_bound_history.m : MATLAB Figure 1 export from recorded histories.
 plot_floor_traces.m : MATLAB Figure 2 export from recorded traces.
 pole_order.m : Supporting numerical routine; see the function header.
 reproduce_simax.m : Public entry point; isolated report and numerical reruns.
 require_accepted.m : Supporting numerical routine; see the function header.
 results_dir.m : Supporting numerical routine; see the function header.
-rksm_bound_controller.m : Proposed adaptive projection algorithm and a posteriori stopping test.
-rksm_controller.m : Supporting numerical routine; see the function header.
+rksm_bound_controller.m : Algorithm 5.1: adaptive projection with the a posteriori stopping test.
 run_bound_experiments.m : Dense-reference, stationary-bound and solvability experiments.
 run_bound_history.m : Time-resolved Figure 1 data.
 run_complete_solves.m : Large single-state comparisons and reference refinement.
@@ -32,7 +28,6 @@ run_floor_traces.m : Continue projection to record the floating-point floor.
 run_multistate_transport.m : Multistate comparisons and reference refinement.
 run_scaled_suite.m : Four main experimental stages in dependency order.
 run_simax_smoke.m : Two small generated numerical examples.
-scale_ops.m : Supporting numerical routine; see the function header.
 scale_problem.m : Supporting numerical routine; see the function header.
 scaled_radon_nodes.m : Independent scaled Radon flow evaluation.
 timing_pick.m : Supporting numerical routine; see the function header.
@@ -79,8 +74,8 @@ results_scaled/multistate_transport/run_run.log
 results_scaled/run_scaled_suite.log
 SOURCE_DATA_MANIFEST.csv
 validation/dense_rerun.log
-validation/evaluators_rerun.log
 validation/numerical_comparison.json
+validation/numerical_comparison_v1.0.1.json
 
 Eight large coarse reference MAT files are distributed in four separate data ZIPs.
 Their exact paths, sizes and SHA-256 hashes are listed in SOURCE_DATA_MANIFEST.csv.

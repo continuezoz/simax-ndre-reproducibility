@@ -1,5 +1,5 @@
 function run_bound_history(n,tau)
-%RUN_BOUND_HISTORY Node-wise true error and error estimate of Algorithm 1
+%RUN_BOUND_HISTORY Node-wise true error and error estimate of Algorithm 5.1
 % (figure data) for the near-critical single-state model and the
 % multistate model with gamma=0.9999; dense full-order reference as in
 % run_bound_experiments("dense"). Output: results_scaled/bounds/history_*.csv

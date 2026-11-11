@@ -5,7 +5,7 @@ function run_scaled_suite(first,boundSize)
 % so an interrupted run can be resumed; references and calibrations already
 % saved are reused by the stage scripts. Stages that read references of
 % earlier stages come after them (EBA deflated after E5/E7, evaluators
-% after E6). Each stage waits until the machine is idle.
+% after E6).
 if nargin<1, first=1; end
 if nargin<2, boundSize=600; end
 ndre_scaled(true);
@@ -21,7 +21,7 @@ stages={ ...
     "E7 multistate",               @() run_multistate_transport("run"); ...
     "EV evaluators",               @() run_evaluator_comparison("transport")};
 for j=first:size(stages,1)
-    timer=tic; % wait_idle disabled 2026-11-11: its own PowerShell sampling kept the load above 15%
+    timer=tic;
     note('STAGE %d %s started %s',j,stages{j,1},string(datetime('now')));
     steps=stages{j,2}; if ~iscell(steps), steps={steps}; end
     for q=1:numel(steps), ndre_scaled(true); steps{q}(); end
@@ -29,17 +29,6 @@ for j=first:size(stages,1)
     note('STAGE %d %s finished in %.0f s',j,stages{j,1},toc(timer));
 end
 note('ALL STAGES DONE %s',string(datetime('now')));
-end
-
-function wait_idle(note)
-% Whole-machine load, sampled before MATLAB starts the next stage.
-quiet=0;
-while quiet<4
-    [~,s]=system('powershell -NoProfile -Command "(Get-CimInstance Win32_Processor | Measure-Object LoadPercentage -Average).Average"');
-    cpu=str2double(strtrim(s));
-    if cpu<15, quiet=quiet+1; else, quiet=0; note('WAIT load=%g%%',cpu); end
-    pause(5);
-end
 end
 
 function log_line(file,text)

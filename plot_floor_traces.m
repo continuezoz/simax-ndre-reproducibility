@@ -1,6 +1,6 @@
 function plot_floor_traces(tau)
-%PLOT_FLOOR_TRACES Figure: certified relative accuracy tau*max_j
-% eps_j/(tau_a+tau*||Y(sigma_j)||_F) of Algorithm 1 against the dimension
+%PLOT_FLOOR_TRACES Figure: estimated relative accuracy tau*max_j
+% eps_j/(tau_a+tau*||Y(sigma_j)||_F) of Algorithm 5.1 against the dimension
 % for several n (data of run_floor_traces), with the levels u*||A||.
 if nargin<1, tau=1e-7; end
 root=fileparts(mfilename('fullpath')); in=fullfile(root,'results_scaled','floor');

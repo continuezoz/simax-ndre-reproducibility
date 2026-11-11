@@ -1,7 +1,7 @@
 function s=pole_order(s,order)
 %POLE_ORDER Reorder a fixed pole set so that every prefix samples its range.
-% "monotone" keeps the given order, "leja" uses discrete Leja points of
-% log|s| starting at s(1), and "interleave" uses bit-reversed indices.
+% "monotone" keeps the given order, and "leja" uses discrete Leja points of
+% log|s| starting at s(1).
 n=numel(s);
 switch string(order)
     case "monotone"
@@ -13,10 +13,6 @@ switch string(order)
             logdist=logdist+log(abs(x-x(k))+realmin);
         end
         s=s(idx);
-    case "interleave"
-        bits=ceil(log2(n)); r=zeros(1,2^bits);
-        for j=0:2^bits-1, r(j+1)=bin2dec(fliplr(dec2bin(j,bits))); end
-        s=s(r(r<n)+1);
     otherwise
         error('pole:order','Unknown pole order %s.',order);
 end

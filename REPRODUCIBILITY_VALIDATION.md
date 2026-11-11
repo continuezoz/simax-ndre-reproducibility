@@ -22,12 +22,12 @@ unchanged; their identities are in SOURCE_DATA_MANIFEST.csv.
 * `reproduce_simax("dense")`: recomputed all 24 n=600 dense bound cases,
   34 stationary-bound records, 16 solvability records (688 candidate
   stationary problems in total), and the two Figure 1 histories.
-* `reproduce_simax("evaluators")`: recomputed all four Table 6 evaluators
+* `reproduce_simax("evaluators")`: recomputed all four Table 5 evaluators
   using the n=4000 reference extracted from the actual transport ZIP.
 * All non-timing fields of the six recomputed CSVs match the archived
   CSVs exactly as decimal strings. Both error histories match at all
-  181 and 124 nodes. See validation/numerical_comparison.json and the
-  sanitized rerun logs. Timings were excluded from this comparison.
+  181 and 124 nodes. See validation/numerical_comparison.json, which
+  records the comparison for all six files, and validation/dense_rerun.log. Timings were excluded from this comparison.
 * All four reference ZIP archives passed ZIP CRC checks. SHA-256 digests
   of each of their eight MAT members were checked against the frozen
   source-data manifest. The code ZIP is also CRC-checked at packaging.
@@ -41,3 +41,26 @@ Their original completed CSVs and driver logs are included, with all
 coarse reference data and code to regenerate the finer-reference checks.
 
 Release preparation does not constitute a journal decision on the badge.
+
+## v1.0.1 update
+
+Documentation and exported table file names were renumbered to the final
+manuscript (Tables 1--5), and the empty file validation/evaluators_rerun.log
+was removed. Code paths that no experiment uses were removed from the
+sources (README, version history); the recorded data are those of v1.0.0.
+The cleaned sources were checked as follows (MATLAB R2026b, Windows).
+
+* `checkcode` reports no problem in `nla_core.m` and no error in any file.
+* `reproduce_simax("verify")` and `reproduce_simax("report")` passed and
+  produced all five tables and both figures.
+* `reproduce_simax("smoke")` gave dimensions 21 and 27, errors 5.73e-8 and
+  1.51e-9, and bounds 3.22e-7 and 1.77e-7, as in v1.0.0.
+* `reproduce_simax("dense")` and `reproduce_simax("evaluators")` (with the
+  accepted n=4000 space recomputed) were rerun. All non-timing fields of the
+  six recomputed CSVs equal the archived CSVs as decimal strings; see
+  validation/numerical_comparison_v1.0.1.json.
+* The large drivers were compared with the v1.0.0 sources on the same
+  problems: `run_multistate_transport("run",400)` gives identical rows
+  for both multistate models, and for the single-state model with n=4000
+  the EBA--BDF1 baseline (basis, final state, trajectory) and Algorithm 5.1
+  (bases, status, estimate trace) are bitwise identical.

@@ -1,5 +1,5 @@
 function run_floor_traces(sizes,tau)
-%RUN_FLOOR_TRACES Rounding floor of the error estimate: Algorithm 1 on the
+%RUN_FLOOR_TRACES Rounding floor of the error estimate: Algorithm 5.1 on the
 % near-critical single-state model, continued to the last pole without
 % stopping (o.noStop), for several n. Output: results_scaled/floor/
 % trace_n<n>.csv (ratio = max_j eps_j/(tau_a+tau*||Y(sigma_j)||_F)) and

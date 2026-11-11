@@ -2,7 +2,7 @@
 
 This repository accompanies **Well-Posedness and A Posteriori Error Bounds
 for Projected Nonsymmetric Differential Riccati Equations**, by **Ze Zhang
-and Jianzhou Liu**. Version **v1.0.0** contains the code, parameter choices,
+and Jianzhou Liu**. Version **v1.0.1** contains the code, parameter choices,
 recorded numerical data, and MATLAB figure scripts for the SIMAX manuscript
 dated 11 November 2026. It is provided to support a request for the SIMAX
 code-and-data-available reproducibility badge.
@@ -34,12 +34,13 @@ folder = reproduce_simax("all");
 This creates a separate working directory, generates both model families,
 computes the coarse and finer reference solutions, and runs all experiments
 used by the manuscript. No external dataset is needed. All parameters are in
-the supplied `.m` files. The original solver routines are copied unchanged
-from the working project; `SOURCE_DATA_MANIFEST.csv` records their SHA-256
-hashes and the identities of the recorded data.
+the supplied `.m` files. The sources contain only the code paths used by
+the experiments of the manuscript; `SOURCE_DATA_MANIFEST.csv` records their
+SHA-256 hashes and the identities of the recorded data.
 
 For a faster rerun using the archived reference solutions, download the four
-`simax-reference-*.zip` assets from the **v1.0.0 GitHub Release**, and unzip
+`simax-reference-*.zip` assets from the **v1.0.0 GitHub Release** (they are
+unchanged in v1.0.1), and unzip
 each into the repository directory. Each archive has paths beginning with
 `results_scaled/`. Then run:
 
@@ -57,25 +58,24 @@ Individual verification runs are also available:
 
 ```matlab
 reproduce_simax("dense")       % all n=600 bound/solvability tests and Figure 1 data
-reproduce_simax("evaluators")  % recompute Table 6; needs the transport reference archive
+reproduce_simax("evaluators")  % recompute Table 5; needs the transport reference archive
 ```
 
 ## Paper-to-code map
 
 | Paper item | Numerical driver | Recorded data / figure producer |
 |---|---|---|
-| Table 2: projected stationary solvability | `run_bound_experiments("wellposed",600)` | `results_scaled/bounds/wellposed.csv` |
-| Table 3: dense-reference error bounds | `run_bound_experiments("dense",600)` | `results_scaled/bounds/dense_bounds.csv`; select tolerances 1e-4, 1e-7, 1e-9 |
+| Table 1: projected stationary solvability | `run_bound_experiments("wellposed",600)` | `results_scaled/bounds/wellposed.csv` |
+| Table 2: dense-reference error bounds | `run_bound_experiments("dense",600)` | `results_scaled/bounds/dense_bounds.csv`; select tolerances 1e-4, 1e-7, 1e-9 |
 | Section 6.2: stationary error bounds | `run_bound_experiments("stationary",600)` | `results_scaled/bounds/stationary_bounds.csv` |
 | Figure 1: error-bound histories | `run_bound_history(600,1e-7)` | `bounds/history_*.csv`; `plot_bound_history` |
-| Table 4: large single-state solves | `run_complete_solves("run")` | `complete_solves/complete_solves.csv`; Newton maxima in `run_run.log` |
+| Table 3: large single-state solves | `run_complete_solves("run")` | `complete_solves/complete_solves.csv`; Newton maxima in `run_run.log` |
 | Figure 2: floating-point floors | `run_floor_traces` | `floor/trace_n*.csv`, `floor_summary.csv`; `plot_floor_traces` |
-| Table 5: multistate solves | `run_multistate_transport("run")` | `multistate_transport/multistate_run.csv` |
-| Table 6: reduced-flow evaluators | `run_evaluator_comparison("transport")` | `evaluator_comparison/transport_evaluators.csv` |
+| Table 4: multistate solves | `run_multistate_transport("run")` | `multistate_transport/multistate_run.csv` |
+| Table 5: reduced-flow evaluators | `run_evaluator_comparison("transport")` | `evaluator_comparison/transport_evaluators.csv` |
 
 `export_simax_tables` converts these data to five self-contained numeric
-tables. Table 1 in the manuscript is a notation table, not a numerical
-experiment. The manuscript typesets Tables 2--6 by hand; exported tables
+tables. The manuscript typesets Tables 1--5 by hand; exported tables
 contain the corresponding numerical entries, with their own descriptive
 column headers. `PAPER_RESULTS.md` explains aggregation and provenance.
 
@@ -125,6 +125,11 @@ Computed-output error also includes floating-point evaluation error.
 Error evaluations omit t=0 and compare BDF1 only at its available nodes.
 All paper errors use the scaled variables and relative Frobenius norms.
 
+Algorithm 5.1 of the manuscript is stated for a general initial value X(0)
+whose factors lie in the starting blocks. The implementation
+(`rksm_bound_controller.m`) covers X(0)=0, the case of every experiment in
+the paper; `run_simax_smoke` uses the same case.
+
 `verify` checks the archived data against the stated outcomes; it does not
 rerun the solvers. `smoke`, `dense`, `evaluators`, `all`, and `cached`
 perform numerical computations. New runs can differ at rounding level,
@@ -138,7 +143,9 @@ all copied working sources and data, including large reference files.
 `REPRODUCIBILITY_VALIDATION.md` records the release validation. Generated
 tables and rerun outputs are intentionally ignored by Git.
 
-GitHub Release v1.0.0 provides a code/data snapshot ZIP and four reference
+GitHub Release v1.0.1 provides the current code/data snapshot ZIP; the four
+reference data ZIPs of Release v1.0.0 are unchanged and apply to v1.0.1.
+Release v1.0.0 provides a code/data snapshot ZIP and four reference
 data ZIPs. The same five archives are prepared for SIMAX supplementary
 materials, with a SHA-256 checksum list and supplementary-material index.
 Download the code snapshot into an empty directory and extract the data
@@ -151,3 +158,17 @@ Copyright (c) 2026 Ze Zhang and Jianzhou Liu. The authors make this code and
 data publicly accessible for inspection and reproduction of the reported
 experiments. A separate general-purpose open-source reuse license has not
 been specified. See `COPYRIGHT.txt`.
+
+## Version history
+
+* v1.0.1: table numbers in the documentation and the exported file names
+  follow the final manuscript (Tables 1--5); an empty log file was removed;
+  the implementation scope of Algorithm 5.1 is stated. Code paths that no
+  experiment of the manuscript uses were removed: five source files
+  (`increment_defects.m`, `li2021_lowrank_exp.m`, `mdm_nodes.m`,
+  `rksm_controller.m`, `scale_ops.m`), the stopping rules for the unscaled
+  equation, test families other than the two transport models, and
+  unused integrators and reference flows in `nla_core.m`. The drivers call
+  `rksm_bound_controller.m` (Algorithm 5.1) directly. The numerical results
+  are unchanged; see `REPRODUCIBILITY_VALIDATION.md`.
+* v1.0.0: initial release.

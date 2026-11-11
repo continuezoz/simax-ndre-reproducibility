@@ -20,12 +20,12 @@ for model = models'
 end
 T = cell2table(rows,'VariableNames',{'Problem','Equation','Nu','FailuresLeja', ...
     'FailuresIncreasing','MinClosedLoopMargin','MaxStationaryNorm','FlowFailures'});
-emit(T,'table2_wellposed',out);
+emit(T,'table1_wellposed',out);
 keep = any(abs(log10(D.tau)-[-4 -7 -9]) < 1e-8,2);
 T = D(keep,{'case','tau','k','projOverTarget','projOverEstimateMax', ...
     'timeAtProjMax','projOverEstimateFinal','evalErrorOverNormMax'});
 T.Properties.VariableNames{1} = 'Problem';
-emit(T,'table3_dense_bounds',out);
+emit(T,'table2_dense_bounds',out);
 C = read('complete_solves/complete_solves.csv');
 newton = parse_newton(fullfile(res,'complete_solves','run_run.log'));
 rows = cell(0,11);
@@ -33,7 +33,7 @@ for n = unique(C.n,'stable')'
     I = C(C.n==n & C.method=="incremental-composed",:);
     R = C(C.n==n & C.method=="radon-composed",:);
     B = C(C.n==n & C.space=="EBA (published)",:);
-    assert(height(I)==1 && height(R)==1 && height(B)==1,'simax:table4','Incomplete n=%d.',n);
+    assert(height(I)==1 && height(R)==1 && height(B)==1,'simax:table3','Incomplete n=%d.',n);
     rows(end+1,:) = {n,I.tau,I.dimension,I.maxRelativeError,I.medianSeconds, ...
         R.maxRelativeError,R.medianSeconds,B.dimension,B.maxRelativeError, ...
         B.medianSeconds,newton(n)}; %#ok<AGROW>
@@ -41,7 +41,7 @@ end
 T = cell2table(rows,'VariableNames',{'N','Tau','Dimension','IncrementError', ...
     'IncrementSeconds','RadonError','RadonSeconds','BDF1Dimension','BDF1Error', ...
     'BDF1Seconds','MaxNewtonBackwardError'});
-emit(T,'table4_single_state',out);
+emit(T,'table3_single_state',out);
 M = read('multistate_transport/multistate_run.csv');
 pairs = unique(M(:,{'n','gamma'}),'rows','stable');
 rows = cell(0,9);
@@ -55,11 +55,11 @@ for j = 1:height(pairs)
 end
 T = cell2table(rows,'VariableNames',{'N','Gamma','Dimension','IncrementError', ...
     'IncrementSeconds','RadonError','RadonSeconds','BDF1Dimension','BDF1Status'});
-emit(T,'table5_multistate',out);
+emit(T,'table4_multistate',out);
 E = read('evaluator_comparison/transport_evaluators.csv');
 T = E(:,{'method','maxRelativeError','peakTime','medianSeconds','sylvesterResidual'});
-emit(T,'table6_evaluators',out);
-fprintf('Exported Tables 2--6 to %s\n',out);
+emit(T,'table5_evaluators',out);
+fprintf('Exported Tables 1--5 to %s\n',out);
 end
 
 function values = parse_newton(filename)

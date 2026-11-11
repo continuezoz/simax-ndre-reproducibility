@@ -3,9 +3,8 @@ function run_complete_solves(mode)
 % transport benchmark for n = 4000, 10000, 20000, 40000.
 % Timed work: basis construction, all candidate checks, projection, and the
 % evaluation of all output states. References and error checks are untimed.
-% The projected solver uses the transient check on geometric guard nodes
-% between 0.01/lambda_max and t_f. Mode "rksm" reruns only the projected
-% solver rows and replaces them in complete_solves.csv.
+% The projected solver is Algorithm 5.1 (rksm_bound_controller) followed by
+% composed increment or scaled Radon evaluation; the baseline is EBA--BDF1.
 if nargin<1, mode="run"; end
 root=fileparts(mfilename('fullpath'));
 out=fullfile(root,results_dir,'complete_solves');
@@ -29,7 +28,6 @@ for n=[4000 10000 20000 40000]
     fprintf('REFERENCE n=%d refinement=%.3e\n',n,ref.spaceRefinement);
     o=struct('tf',1,'checkDimension',10);
     shifts=pole_order(-logspace(log10(p.shiftRange(1)),log10(p.shiftRange(2)),319),"leja");
-    guard=logspace(log10(.01/p.shiftRange(2)),log10(o.tf),49);
     % 2026-11-11: for n=40000 the computed estimate has a floor at about
     % 2.35*1e-7 (rounding in A*V, ||A|| ~ 1.1e9), so tau=1e-6 there; the
     % rejected tau=1e-7 search is kept as the record of that floor.
@@ -44,14 +42,13 @@ for n=[4000 10000 20000 40000]
         seconds=zeros(1,timing_reps(4));
         for rep=1:timing_reps(4)
             timer=tic;
-            r=rksm_controller(a,p,"transient",tau,o,guard,shifts); require_accepted(r.status,"transport n="+n);
+            r=rksm_bound_controller(a,p,1e-12,tau,o,shifts); require_accepted(r.status,"transport n="+n);
             red=a.project(p,r.V,r.W); sol=evaluate(a,red,times,method);
             seconds(rep)=toc(timer);
         end
         sol.V=r.V; sol.W=r.W; rows=record(a,rows,n,"RKSM-Leja",method,size(r.V,2),sol,ref,seconds,tau);
-        if mode~="rksm", writetable(struct2table(rows),csv); end
+        writetable(struct2table(rows),csv);
     end
-    if mode=="rksm", continue; end
     % Published EBA--BDF1 baseline with its own endpoint stopping rule.
     opts=a.options(p); opts.tol=1e-10; seconds=zeros(1,timing_reps(4));  % stopping tolerance of the 2020 paper
     for rep=1:timing_reps(4), timer=tic; r=a.adaptive(p,'EBA-BDF1',opts); seconds(rep)=toc(timer); end
@@ -59,10 +56,6 @@ for n=[4000 10000 20000 40000]
     sol=struct('V',r.V,'W',r.W,'Yhistory',r.Yhistory,'Y',r.Y,'time',r.time);
     rows=record(a,rows,n,"EBA (published)","BDF1, h=0.01",size(r.V,2),sol,ref,seconds);
     writetable(struct2table(rows),csv);
-end
-if mode=="rksm"
-    old=readtable(csv,'TextType','string'); new=struct2table(rows);
-    writetable([new;old(old.space~="RKSM-Leja",:)],csv);
 end
 end
 
@@ -94,7 +87,6 @@ end
 
 function sol=evaluate(a,red,times,method)
 if method=="radon-composed", sol=scaled_radon_nodes(red,times,"composed"); return; end
-if method=="ode15s", sol=a.dense(red,times,1e-10); return; end
 % Increment evaluation needs Ystar, Ac and Dc only, not the kernel L.
 prep=a.prepare(red,false);
 sol=incremental_centered_nodes(red,prep,times,"composed");

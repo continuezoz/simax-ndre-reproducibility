@@ -1,7 +1,7 @@
 function run_bound_experiments(stage,n)
 %RUN_BOUND_EXPERIMENTS Error bounds and well-posedness on problems small
 % enough for a dense full-order reference (scaled equation, identity bases).
-%   "dense"       Algorithm 1 for tau = 1e-4,...,1e-9: accepted dimensions,
+%   "dense"       Algorithm 5.1 for tau = 1e-4,...,1e-9: accepted dimensions,
 %                 true error against the target and against the estimate.
 %   "stationary"  ||Xstar - V*Ystar*W'||_F and the bound omega/(2*nu) of
 %                 Theorem (computable) for growing spaces.
@@ -9,7 +9,7 @@ function run_bound_experiments(stage,n)
 %                 stationary solve and of the flow evaluation, closed-loop
 %                 margin and ||Ystar||_2, for the scaled equation and for
 %                 the unscaled equation with Euclidean orthonormal bases.
-% Results: results/bounds/*.csv.
+% Results: results_scaled/bounds/*.csv.
 if nargin<1, stage="all"; end
 if nargin<2, n=600; end
 stage=string(stage); root=fileparts(mfilename('fullpath'));

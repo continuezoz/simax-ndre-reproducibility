@@ -1,5 +1,5 @@
 function r=rksm_bound_controller(a,p,tauA,tau,o,shifts)
-%RKSM_BOUND_CONTROLLER Algorithm 1: two-sided rational Krylov expansion of
+%RKSM_BOUND_CONTROLLER Algorithm 5.1: two-sided rational Krylov expansion of
 % the scaled problem p (see ndre_setup), stopped by the a posteriori error
 % estimate. The reduced equation is solved around its contractive
 % stationary solution and the estimate epsilon_j of error_estimate is

@@ -2,7 +2,7 @@ cff-version: 1.2.0
 message: "Please cite the associated manuscript when referring to these experiments."
 title: "Reproducibility package: Well-Posedness and A Posteriori Error Bounds for Projected Nonsymmetric Differential Riccati Equations"
 type: software
-version: 1.0.0
+version: 1.0.1
 date-released: 2026-11-11
 authors:
   - family-names: Zhang

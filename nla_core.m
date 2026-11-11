@@ -1,13 +1,13 @@
 function api=nla_core
-%NLA_CORE Shared base-MATLAB kernels for the NLA experiment revision.
-% EBA/BDF1 kernels are copied from the verified 2020 reconstruction.
-% BDF2/3 use the published coefficients; BDF3 has local trapezoidal startup.
+%NLA_CORE Shared base-MATLAB kernels: the single-state transport problem,
+% Galerkin projection, the stationary solution of the reduced equation, the
+% centered flow, scaled Radon composition (mobius), error curves, and the
+% EBA--BDF1 baseline (extended block Arnoldi with projected backward Euler),
+% reconstructed from the 2020 paper.
 api=struct('problem',@make_problem,'options',@default_options, ...
-    'adaptive',@adaptive_solve,'fixed',@fixed_solve,'basis',@build_basis, ...
+    'adaptive',@adaptive_solve,'basis',@build_basis, ...
     'project',@project_problem,'prepare',@centered_prepare, ...
-    'evaluate',@centered_evaluate,'bdf',@integrate_projected_bdf1, ...
-    'errors',@trajectory_errors,'reference',@reference_trajectory, ...
-    'split',@split_trajectory,'dense',@dense_trajectory,'radon',@radon_trajectory, ...
+    'evaluate',@centered_evaluate,'errors',@trajectory_errors, ...
     'mobius',@mobius_trajectory);
 end
 function opts=default_options(prob)
@@ -20,46 +20,25 @@ if prob.family~="transport", opts.maxDim=160; opts.maxEBASteps=40; end
 end
 
 function prob=make_problem(family,n,p,seed,parameter)
+% Single-state transport model (Section 6.1); parameter = [c alpha].
+% p and seed are kept for the interface; the model has p = n.
 if nargin<3 || isempty(p), p=n; end
 if nargin<4 || isempty(seed), seed=20261007+n+p; end
 if nargin<5, parameter=3; end
 family=string(family);
-if family=="transport"
-    c=0.9999; alpha=1e-8;
-    if numel(parameter)==2, c=parameter(1); alpha=parameter(2); end
-    [omega,w]=load_gauss_legendre_matlab(n);
-    e=ones(n,1); q=w./(2*omega);
-    a=1./(c*omega*(1+alpha)); d=1./(c*omega*(1-alpha));
-    prob=struct('n',n,'p',n,'F',e,'G',e,'normQ',n,'blockWidth',2, ...
-        'Aapply',@(X)a.*X-e*(q'*X),'Dapply',@(X)d.*X-q*(e'*X), ...
-        'DTapply',@(X)d.*X-e*(q'*X),'Sapply',@(X)q*(q'*X), ...
-        'Asolve',@(X)rankone_inverse(X,a,e,q),'Dsolve',@(X)rankone_inverse(X,d,q,e), ...
-        'DTsolve',@(X)rankone_inverse(X,d,e,q), ...
-        'Ashift',@(X,s)rankone_inverse(X,a-s,e,q), ...
-        'DTshift',@(X,s)rankone_inverse(X,d-s,e,q),'shiftRange',[min(a),max(a)]);
-else
-    rng(seed,'twister');
-    if family=="square_admissible"
-        A=spdiags([-ones(n,1),parameter*ones(n,1),-ones(n,1)],-1:1,n,n);
-        D=spdiags([-ones(p,1),parameter*ones(p,1),-ones(p,1)],-1:1,p,p);
-        [F,~]=qr(randn(n,2),0); [G,~]=qr(randn(p,2),0);
-    elseif family=="square" || family=="original_rectangular"
-        A=spdiags([-ones(n,1),2*ones(n,1),-ones(n,1)],-1:1,n,n);
-        D=spdiags([-ones(p,1),2*ones(p,1),-ones(p,1)],-1:1,p,p);
-        F=randn(n,2); G=randn(p,2);
-    else
-        A=spdiags([-ones(n,1),parameter*ones(n,1),-0.5*ones(n,1)],-1:1,n,n);
-        D=spdiags([-0.5*ones(p,1),parameter*ones(p,1),-ones(p,1)],-1:1,p,p);
-        [F,~]=qr(randn(n,2),0); [G,~]=qr(randn(p,2),0);
-    end
-    S=sparse(1:2,1:2,ones(2,1),p,n);
-    prob=struct('n',n,'p',p,'F',F,'G',G, ...
-        'normQ',sqrt(sum(sum((F'*F).*(G'*G)'))),'blockWidth',4, ...
-        'Aapply',@(X)A*X,'Dapply',@(X)D*X,'DTapply',@(X)D'*X, ...
-        'Sapply',@(X)S*X,'Asolve',@(X)A\X,'Dsolve',@(X)D\X,'DTsolve',@(X)D'\X, ...
-        'Ashift',@(X,s)(A-s*speye(n))\X, ...
-        'DTshift',@(X,s)(D'-s*speye(p))\X,'shiftRange',[1e-2,4]);
-end
+assert(family=="transport",'nla:family','Only the transport family is implemented.');
+c=0.9999; alpha=1e-8;
+if numel(parameter)==2, c=parameter(1); alpha=parameter(2); end
+[omega,w]=load_gauss_legendre_matlab(n);
+e=ones(n,1); q=w./(2*omega);
+a=1./(c*omega*(1+alpha)); d=1./(c*omega*(1-alpha));
+prob=struct('n',n,'p',n,'F',e,'G',e,'normQ',n,'blockWidth',2, ...
+    'Aapply',@(X)a.*X-e*(q'*X),'Dapply',@(X)d.*X-q*(e'*X), ...
+    'DTapply',@(X)d.*X-e*(q'*X),'Sapply',@(X)q*(q'*X), ...
+    'Asolve',@(X)rankone_inverse(X,a,e,q),'Dsolve',@(X)rankone_inverse(X,d,q,e), ...
+    'DTsolve',@(X)rankone_inverse(X,d,e,q), ...
+    'Ashift',@(X,s)rankone_inverse(X,a-s,e,q), ...
+    'DTshift',@(X,s)rankone_inverse(X,d-s,e,q),'shiftRange',[min(a),max(a)]);
 prob.rightBasisApply=prob.DTapply; prob.rightBasisSolve=prob.DTsolve;
 prob.family=family; prob.seed=seed; prob.parameter=parameter;
 if family=="transport" && ndre_scaled, prob=ndre_setup(prob); end
@@ -69,97 +48,18 @@ function X=rankone_inverse(B,d,u,v)
 Z=B./d; q=u./d; X=Z+q*((v'*Z)/(1-v'*q));
 end
 
-function [V,W]=build_basis(prob,basisName,dimension,maxDim)
-if nargin<4, maxDim=dimension; end
-if string(basisName)=="EBA", [V,W]=extended_pair(prob,dimension); return; end
-if string(basisName)=="polynomial"
-    r=size(prob.F,2); V=orth(prob.F); W=orth(prob.G);
-    for j=1:dimension/r-1
-        V=append_block(V,prob.Aapply(V(:,end-r+1:end)),r);
-        W=append_block(W,prob.DTapply(W(:,end-r+1:end)),r);
-    end
-    return
-end
-r=size(prob.F,2); shifts=-logspace(log10(prob.shiftRange(1)),log10(prob.shiftRange(2)),maxDim/r-1);
-V=orth(prob.F); W=orth(prob.G);
-for j=1:dimension/r-1
-    V=append_block(V,prob.Ashift(V(:,end-r+1:end),shifts(j)),r);
-    W=append_block(W,prob.DTshift(W(:,end-r+1:end),shifts(j)),r);
-end
+function [V,W]=build_basis(prob,basisName,dimension)
+% Extended block Arnoldi bases of the given dimension (references).
+assert(string(basisName)=="EBA",'nla:basis','Only the EBA basis is implemented.');
+[V,W]=extended_pair(prob,dimension);
 end
 
 function result=adaptive_solve(prob,method,opts)
-if startsWith(string(method),"EBA-BDF")
-    opts.bdfOrder=str2double(extractAfter(string(method),"EBA-BDF"));
-    result=solve_original_eba_bdf1(prob,opts); result.accepted=result.converged;
-    result.indicator=result.boundaryFrobeniusResidual;
-    result.branchMargin=NaN; result.middleRcond=NaN; return
-end
-timer=tic; r=size(prob.F,2); V=orth(prob.F); W=orth(prob.G);
-shifts=-logspace(log10(prob.shiftRange(1)),log10(prob.shiftRange(2)),opts.maxDim/r-1);
-curve=table('Size',[0,5],'VariableTypes',repmat({'double'},1,5), ...
-    'VariableNames',{'dimension','indicator','reducedDefect','branchMargin','seconds'});
-accepted=false; status="MAX_DIMENSION"; margin=NaN; indicator=Inf;
-for j=1:numel(shifts)
-    V=append_block(V,prob.Ashift(V(:,end-r+1:end),shifts(j)),r);
-    W=append_block(W,prob.DTshift(W(:,end-r+1:end),shifts(j)),r);
-    dim=size(V,2); if mod(dim,opts.checkDimension)~=0, continue; end
-    red=project_problem(prob,V,W);
-    try
-        prepared=centered_prepare(red); endpoint=centered_evaluate(prepared,opts.tf,true);
-        [indicator,reduced,~,~]=lifted_residual(red,endpoint.Y,endpoint.dY);
-        margin=prepared.minClosedLoopRealPart; status="RESIDUAL";
-    catch ME
-        indicator=Inf; reduced=Inf; status=string(ME.identifier);
-    end
-    curve(end+1,:)={dim,indicator,reduced,margin,toc(timer)};
-    if indicator<opts.gate, accepted=true; status="OK"; break; end
-end
-if ~accepted
-    result=struct('V',V,'W',W,'dimension',size(V,2),'accepted',false, ...
-        'indicator',indicator,'status',status,'curve',curve,'totalSeconds',toc(timer), ...
-        'branchMargin',margin,'middleRcond',NaN); return
-end
-result=centered_trajectory(prepared,opts.outputTimes);
-result.V=V; result.W=W; result.dimension=size(V,2); result.accepted=true;
-result.indicator=indicator; result.status=status; result.curve=curve;
-result.branchMargin=margin; result.totalSeconds=toc(timer);
-end
-
-function result=fixed_solve(prob,basisName,solverName,dim,opts)
-timer=tic; basisTimer=tic;
-[V,W]=build_basis(prob,basisName,dim,opts.maxDim); basisSeconds=toc(basisTimer);
-projectionTimer=tic; red=project_problem(prob,V,W); projectionSeconds=toc(projectionTimer);
-solverTimer=tic;
-if startsWith(string(solverName),"BDF")
-    opts.bdfOrder=str2double(extractAfter(string(solverName),"BDF"));
-    sol=integrate_projected_bdf1(red,opts);
-    dY=-red.A*sol.Y-sol.Y*red.D+sol.Y*red.S*sol.Y+red.Q; margin=NaN;
-elseif string(solverName)=="centered"
-    prepared=centered_prepare(red); sol=centered_trajectory(prepared,opts.outputTimes);
-    ep=centered_evaluate(prepared,opts.tf,true); dY=ep.dY; margin=prepared.minClosedLoopRealPart;
-else
-    sol=radon_trajectory(red,opts.outputTimes,opts.h);
-    dY=-red.A*sol.Y-sol.Y*red.D+sol.Y*red.S*sol.Y+red.Q; margin=NaN;
-end
-solverSeconds=toc(solverTimer); [indicator,~,~,~]=lifted_residual(red,sol.Y,dY);
-result=sol; result.V=V; result.W=W; result.dimension=dim;
-result.basisSeconds=basisSeconds; result.projectionSeconds=projectionSeconds;
-result.solverSeconds=solverSeconds; result.totalSeconds=toc(timer);
-result.accepted=isfinite(indicator) && indicator<opts.gate;
-result.indicator=indicator; result.branchMargin=margin;
-end
-
-function sol=centered_trajectory(prepared,times)
-[k,ell]=size(prepared.Ystar); Yhistory=zeros(k,ell,numel(times)); rc=ones(size(times));
-for j=1:numel(times)
-    if times(j)==0, Yhistory(:,:,j)=prepared.Ystar+prepared.E0;
-    else
-        value=centered_evaluate(prepared,times(j),false);
-        Yhistory(:,:,j)=value.Y; rc(j)=value.middleRcond;
-    end
-end
-sol=struct('Y',Yhistory(:,:,end),'Yhistory',Yhistory,'time',times,'middleRcond',min(rc));
+% Published EBA--BDF1 solver with its own endpoint stopping rule.
+assert(string(method)=="EBA-BDF1",'nla:method','Only EBA-BDF1 is implemented.');
+result=solve_original_eba_bdf1(prob,opts); result.accepted=result.converged;
+result.indicator=result.boundaryFrobeniusResidual;
+result.branchMargin=NaN; result.middleRcond=NaN;
 end
 
 function curve=trajectory_errors(a,b)
@@ -174,90 +74,6 @@ for j=1:count
 end
 curve=table(b.time(:),referenceNorm,absoluteError,relativeError, ...
     'VariableNames',{'time','referenceNorm','absoluteError','relativeError'});
-end
-
-function sol=split_trajectory(red,times,microSteps)
-% Independent Strang splitting: exact affine-linear and quadratic subflows.
-% No stationary Riccati solution and no centered Sylvester kernel are used.
-k=size(red.A,1); ell=size(red.D,1); h=(times(2)-times(1))/microSteps;
-assert(max(abs(diff(times)-diff(times(1:2))))<1e-12,'Use an equispaced grid.');
-Z=sylvester(red.A,red.D,red.Q); P=expm(-h*red.A/2); R=expm(-h*red.D/2); B=Z-P*Z*R;
-Y=zeros(k,ell); if isfield(red,'Y0'), Y=red.Y0; end
-Yhistory=zeros(k,ell,numel(times)); Yhistory(:,:,1)=Y;
-for j=2:numel(times)
-    for s=1:microSteps
-        Y=P*Y*R+B; Y=Y/(eye(ell)-h*red.S*Y); Y=P*Y*R+B;
-    end
-    Yhistory(:,:,j)=Y;
-end
-sol=struct('Y',Y,'Yhistory',Yhistory,'time',times);
-end
-
-function ref=reference_trajectory(prob,dim,times,tolerance)
-% Global Richardson extrapolation of independent symmetric splitting.
-if nargin<4, tolerance=1e-10; end
-[V,W]=build_basis(prob,"EBA",dim); red=project_problem(prob,V,W);
-previous=[]; temporalDifference=Inf; raw=cell(1,7); fourth=raw; sixth=raw;
-for level=1:7
-    sol=split_trajectory(red,times,2^(level-1)); raw{level}=sol.Yhistory;
-    if level>=2, fourth{level}=(4*raw{level}-raw{level-1})/3; end
-    if level>=3
-        sixth{level}=(16*fourth{level}-fourth{level-1})/15;
-        if ~isempty(previous)
-            diffnorm=vecnorm(reshape(sixth{level}-previous,dim^2,[]),2,1);
-            refnorm=vecnorm(reshape(sixth{level},dim^2,[]),2,1);
-            temporalDifference=max(diffnorm(2:end)./refnorm(2:end));
-            fprintf('  reference dim=%d microsteps=%d refinement=%.3e\n',dim,2^(level-1),temporalDifference);
-            if temporalDifference<tolerance, break; end
-        end
-        previous=sixth{level};
-    end
-end
-ref=struct('V',V,'W',W,'Yhistory',sixth{level},'Y',sixth{level}(:,:,end), ...
-    'time',times,'temporalRefinement',temporalDifference,'microSteps',2^(level-1), ...
-    'referenceQualified',temporalDifference<tolerance,'dimension',dim);
-end
-
-function sol=dense_trajectory(red,times,tolerance)
-if nargin<3, tolerance=1e-12; end
-k=size(red.A,1); ell=size(red.D,1); Y0=zeros(k,ell);
-if isfield(red,'Y0'), Y0=red.Y0; end
-rhs=@(~,y)reshape(-red.A*reshape(y,k,ell)-reshape(y,k,ell)*red.D+ ...
-    reshape(y,k,ell)*red.S*reshape(y,k,ell)+red.Q,[],1);
-jac=@(~,y)kron(speye(ell),-red.A+reshape(y,k,ell)*red.S)+ ...
-    kron((-red.D+red.S*reshape(y,k,ell))',speye(k));
-options=odeset('RelTol',tolerance,'AbsTol',tolerance*0.01,'Jacobian',jac);
-[~,values]=ode15s(rhs,times,Y0(:),options); Yhistory=reshape(values',k,ell,[]);
-sol=struct('Yhistory',Yhistory,'Y',Yhistory(:,:,end),'time',times);
-end
-
-function sol=radon_trajectory(red,times,step)
-% Restarted quotient, with explicit denominator checks.
-k=size(red.A,1); ell=size(red.D,1); H=[red.D,-red.S;red.Q,-red.A];
-Y=zeros(k,ell); if isfield(red,'Y0'), Y=red.Y0; end
-Yhistory=zeros(k,ell,numel(times)); Yhistory(:,:,1)=Y;
-if step>0
-    m=max(1,round((times(2)-times(1))/step)); step=(times(2)-times(1))/m;
-    E=expm(step*H);
-    assert(all(isfinite(E),'all'),'nla:radonOverflow','Radon exponential overflow.');
-end
-minRcond=1;
-for j=2:numel(times)
-    if step==0
-        E=expm(times(j)*H); Z=E*[eye(ell);Yhistory(:,:,1)];
-        denominator=Z(1:ell,:); rc=rcond(denominator);
-        assert(all(isfinite(Z),'all') && rc>1e-14,'nla:radonDenominator','Direct denominator failed.');
-        Y=Z(ell+1:end,:)/denominator;
-    else
-        for s=1:m
-            Z=E*[eye(ell);Y]; denominator=Z(1:ell,:); rc=rcond(denominator);
-            assert(all(isfinite(Z),'all') && rc>1e-14,'nla:radonDenominator','Restarted denominator failed.');
-            Y=Z(ell+1:end,:)/denominator; minRcond=min(minRcond,rc);
-        end
-    end
-    minRcond=min(minRcond,rc); Yhistory(:,:,j)=Y;
-end
-sol=struct('Y',Y,'Yhistory',Yhistory,'time',times,'middleRcond',minRcond);
 end
 
 function sol=mobius_trajectory(red,times,substeps,extraScale)
@@ -519,8 +335,6 @@ end
 function sol = integrate_projected_bdf1(red,opts)
 k = size(red.A,1); ell = size(red.D,1);
 steps = round(opts.tf/opts.h);
-order=1; if isfield(opts,'bdfOrder'), order=opts.bdfOrder; end
-assert(any(order==[1,2,3]),'Only BDF1, BDF2 and BDF3 are implemented.');
 Y = zeros(k,ell);
 if isfield(red,'Y0'), Y=red.Y0; end
 if isfield(red,'Q'), Q=red.Q; else, Q=red.F*red.G'; end
@@ -533,21 +347,9 @@ if storeHistory
 end
 maxNewtonResidual = 0;
 maxNewtonBackwardError = 0;
-previous=Y; older=Y;
 for j = 1:steps
     base = Y;
-    h=opts.h;
-    if order==2 && j>1, base=(4*Y-previous)/3; h=2*opts.h/3; end
-    if order==3
-        if j<=2
-            % Second-order trapezoidal startup has O(h^3) local error.
-            % It uses only the original reduced vector field, no stationary flow.
-            base=Y+0.5*opts.h*(-red.A*Y-Y*red.D+Y*red.S*Y+Q);
-            h=0.5*opts.h;
-        else
-            base=(18*Y-9*previous+2*older)/11; h=6*opts.h/11;
-        end
-    end
+    h = opts.h;
     Yn = Y;
     for it = 1:opts.newtonMax
         f = -red.A*Yn - Yn*red.D + Yn*red.S*Yn + Q;
@@ -575,14 +377,14 @@ for j = 1:steps
     maxNewtonResidual = max(maxNewtonResidual,relativeNewtonResidual);
     maxNewtonBackwardError = max(maxNewtonBackwardError,backwardError);
     % Newton aims at newtonTol; a step whose iteration stagnates at the
-    % rounding level (below 10*newtonTol) is accepted, and the largest
+    % rounding level (below 100*newtonTol) is accepted, and the largest
     % backward error is reported with the run (2026-11-11).
     if backwardError > 100*opts.newtonTol
         error('reproduce2020:newtonNonconvergence', ...
             'Projected BDF Newton failed at step %d, dimension %d, backward error %.3e after %d iterations.', ...
             j,k,backwardError,it);
     end
-    older=previous; previous=Y; Y = Yn;
+    Y = Yn;
     if storeHistory && nextSample<=numel(times) && j==sampleSteps(nextSample)
         Yhistory(:,:,nextSample)=Y; nextSample=nextSample+1;
     end
@@ -596,18 +398,6 @@ end
 end
 
 
-function V = append_block(V,Z,r)
-candidateNorm = norm(Z,'fro');
-Z = Z - V*(V'*Z);
-Z = Z - V*(V'*Z);
-[Q,R,~] = qr(Z,'econ','vector');
-if size(Q,2) ~= r || any(abs(diag(R)) <= 1e-12*max(candidateNorm,eps))
-    error('compare2020:blockBreakdown','Rational block deflated.');
-end
-V = [V,Q]; %#ok<AGROW>
-end
-
-
 function red = project_problem(prob,V,W)
 red = struct('V',V,'W',W,'A',V'*prob.Aapply(V), ...
     'D',W'*prob.Dapply(W),'S',W'*prob.Sapply(V), ...
@@ -616,17 +406,11 @@ red = struct('V',V,'W',W,'A',V'*prob.Aapply(V), ...
 end
 
 
-function sol = centered_at_one(red)
-prepared=centered_prepare(red);
-sol=centered_evaluate(prepared,1,true);
-sol.prepared=prepared;
-end
-
 function prepared=centered_prepare(red,wantKernel)
 % wantKernel=false skips the Sylvester kernel L, which only the direct
 % centered evaluator needs; increment evaluation uses Ystar, Ac and Dc.
 if nargin<2, wantKernel=true; end
-k = size(red.A,1); ell = size(red.D,1);
+ell = size(red.D,1);
 H = [red.D,-red.S;red.Q,-red.A];
 [U,T] = schur(H,'real');
 select = real(eig(T)) > 0;
@@ -699,16 +483,6 @@ if wantDerivative
     U = P*E0/M;
     sol.dY = -Ac*E-E*Dc+U*Kdot*(E0/M)*R;
 end
-end
-
-
-function [res,reduced,left,right] = lifted_residual(red,Y,dY)
-reduced = norm(dY+red.A*Y+Y*red.D-Y*red.S*Y-red.Q,'fro')/red.normQ;
-RA = red.prob.Aapply(red.V)-red.V*red.A;
-RD = red.prob.DTapply(red.W)-red.W*red.D';
-left = norm(RA*Y,'fro')/red.normQ;
-right = norm(Y*RD','fro')/red.normQ;
-res = hypot(hypot(reduced,left),right);
 end
 
 
