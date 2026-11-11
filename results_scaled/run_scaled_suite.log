@@ -1,0 +1,15 @@
+WAIT load=28%
+WAIT load=61%
+WAIT load=30%
+WAIT load=40%
+STAGE 1 B bounds and well-posedness started 2026-11-11 16:11:35
+STAGE 1 B bounds and well-posedness finished in 218 s
+STAGE 2 E6 complete solves started 2026-11-11 16:15:13
+STAGE 2 E6 complete solves started 2026-11-11 16:20:19
+STAGE 3 E7 multistate started 2026-11-11 16:37:33
+STAGE 3 E7 multistate finished in 2596 s
+STAGE 4 EV evaluators started 2026-11-11 17:20:49
+STAGE 4 EV evaluators finished in 5 s
+ALL STAGES DONE 2026-11-11 17:20:54
+STAGE 2 E6 complete solves rerun started 2026-11-11 17:21:18
+STAGE 2 E6 complete solves rerun finished in 1916 s

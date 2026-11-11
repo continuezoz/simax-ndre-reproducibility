@@ -1,0 +1,86 @@
+DENSE transport c=0.5 alpha=0.5 tau=1e-04 OK_ERROR_ESTIMATE k=30 err/target=3.32e-02 err/est max 0.578 (t=1.07e-03, est=7.2e-11) min 2.08e-03 final 2.08e-03
+DENSE transport c=0.5 alpha=0.5 tau=1e-05 OK_ERROR_ESTIMATE k=40 err/target=3.48e-03 err/est max 0.362 (t=6.53e-03, est=4.7e-11) min 2.73e-03 final 2.73e-03
+DENSE transport c=0.5 alpha=0.5 tau=1e-06 OK_ERROR_ESTIMATE k=40 err/target=3.48e-02 err/est max 0.362 (t=6.53e-03, est=4.7e-11) min 2.73e-03 final 2.73e-03
+DENSE transport c=0.5 alpha=0.5 tau=1e-07 OK_ERROR_ESTIMATE k=50 err/target=2.15e-03 err/est max 0.171 (t=3.28e-02, est=1.4e-11) min 3.61e-03 final 3.61e-03
+DENSE transport c=0.5 alpha=0.5 tau=1e-08 OK_ERROR_ESTIMATE k=50 err/target=2.15e-02 err/est max 0.171 (t=3.28e-02, est=1.4e-11) min 3.61e-03 final 3.61e-03
+DENSE transport c=0.5 alpha=0.5 tau=1e-09 OK_ERROR_ESTIMATE k=60 err/target=3.18e-03 err/est max  (t=, est=) min  final 1.01e-01
+DENSE transport c=0.9999 alpha=1e-08 tau=1e-04 OK_ERROR_ESTIMATE k=30 err/target=2.03e-02 err/est max 0.641 (t=3.32e-03, est=1.0e-11) min 8.08e-03 final 1.41e-02
+DENSE transport c=0.9999 alpha=1e-08 tau=1e-05 OK_ERROR_ESTIMATE k=40 err/target=1.29e-03 err/est max 0.369 (t=2.69e-02, est=2.7e-11) min 1.17e-02 final 2.15e-02
+DENSE transport c=0.9999 alpha=1e-08 tau=1e-06 OK_ERROR_ESTIMATE k=40 err/target=1.29e-02 err/est max 0.369 (t=2.69e-02, est=2.7e-11) min 1.17e-02 final 2.15e-02
+DENSE transport c=0.9999 alpha=1e-08 tau=1e-07 OK_ERROR_ESTIMATE k=50 err/target=6.96e-04 err/est max 0.146 (t=1.80e-01, est=2.0e-11) min 1.94e-02 final 2.11e-02
+DENSE transport c=0.9999 alpha=1e-08 tau=1e-08 OK_ERROR_ESTIMATE k=50 err/target=6.96e-03 err/est max 0.146 (t=1.80e-01, est=2.0e-11) min 1.94e-02 final 2.11e-02
+DENSE transport c=0.9999 alpha=1e-08 tau=1e-09 OK_ERROR_ESTIMATE k=60 err/target=5.28e-03 err/est max 0.137 (t=5.65e-01, est=1.0e-11) min 8.65e-02 final 9.97e-02
+DENSE multistate gamma=0.5 tau=1e-04 OK_ERROR_ESTIMATE k=27 err/target=1.09e-04 err/est max 0.935 (t=1.08e-04, est=3.0e-11) min 1.02e-02 final 1.28e-02
+DENSE multistate gamma=0.5 tau=1e-05 OK_ERROR_ESTIMATE k=27 err/target=1.09e-03 err/est max 0.935 (t=1.08e-04, est=3.0e-11) min 1.02e-02 final 1.28e-02
+DENSE multistate gamma=0.5 tau=1e-06 OK_ERROR_ESTIMATE k=27 err/target=1.09e-02 err/est max 0.935 (t=1.08e-04, est=3.0e-11) min 1.02e-02 final 1.28e-02
+DENSE multistate gamma=0.5 tau=1e-07 OK_ERROR_ESTIMATE k=34 err/target=7.60e-03 err/est max 0.599 (t=6.58e-04, est=2.6e-11) min 1.26e-02 final 1.97e-02
+DENSE multistate gamma=0.5 tau=1e-08 OK_ERROR_ESTIMATE k=41 err/target=2.05e-02 err/est max 0.416 (t=1.55e-03, est=2.3e-11) min 1.05e-02 final 2.04e-02
+DENSE multistate gamma=0.5 tau=1e-09 OK_ERROR_ESTIMATE k=48 err/target=2.75e-02 err/est max 0.185 (t=4.41e-03, est=1.4e-11) min 1.34e-02 final 2.39e-02
+DENSE multistate gamma=0.9999 tau=1e-04 OK_ERROR_ESTIMATE k=27 err/target=1.25e-04 err/est max 0.939 (t=1.08e-04, est=7.2e-11) min 6.32e-03 final 8.40e-03
+DENSE multistate gamma=0.9999 tau=1e-05 OK_ERROR_ESTIMATE k=27 err/target=1.25e-03 err/est max 0.939 (t=1.08e-04, est=7.2e-11) min 6.32e-03 final 8.40e-03
+DENSE multistate gamma=0.9999 tau=1e-06 OK_ERROR_ESTIMATE k=27 err/target=1.25e-02 err/est max 0.939 (t=1.08e-04, est=7.2e-11) min 6.32e-03 final 8.40e-03
+DENSE multistate gamma=0.9999 tau=1e-07 OK_ERROR_ESTIMATE k=34 err/target=1.21e-02 err/est max 0.897 (t=1.74e-04, est=1.1e-11) min 4.46e-03 final 8.78e-03
+DENSE multistate gamma=0.9999 tau=1e-08 OK_ERROR_ESTIMATE k=41 err/target=3.06e-02 err/est max 0.637 (t=5.98e-04, est=1.2e-11) min 3.32e-03 final 5.00e-03
+DENSE multistate gamma=0.9999 tau=1e-09 OK_ERROR_ESTIMATE k=55 err/target=3.80e-02 err/est max 0.307 (t=2.74e-03, est=1.9e-11) min 5.35e-03 final 5.41e-03
+STATIONARY transport c=0.5 alpha=0.5 k=10 err=2.820e-04 bound=3.127e-02 ratio=9.020e-03 weight=1.00
+STATIONARY transport c=0.5 alpha=0.5 k=20 err=2.660e-07 bound=4.536e-05 ratio=5.864e-03 weight=1.00
+STATIONARY transport c=0.5 alpha=0.5 k=30 err=4.756e-10 bound=5.507e-08 ratio=8.636e-03 weight=1.00
+STATIONARY transport c=0.5 alpha=0.5 k=40 err=4.125e-13 bound=1.955e-11 ratio=2.111e-02 weight=1.00
+STATIONARY transport c=0.5 alpha=0.5 k=50 err=3.691e-13 bound=3.607e-12 ratio=1.023e-01 weight=1.01
+STATIONARY transport c=0.5 alpha=0.5 k=60 err=3.966e-13 bound=3.681e-12 ratio=1.078e-01 weight=1.01
+STATIONARY transport c=0.5 alpha=0.5 k=70 err=4.184e-13 bound=3.552e-12 ratio=1.178e-01 weight=1.01
+STATIONARY transport c=0.5 alpha=0.5 k=80 err=3.636e-13 bound=3.689e-12 ratio=9.857e-02 weight=1.01
+STATIONARY transport c=0.5 alpha=0.5 k=90 err=3.640e-13 bound=3.548e-12 ratio=1.026e-01 weight=1.01
+STATIONARY transport c=0.9999 alpha=1e-08 k=10 err=5.383e-02 bound=4.193e+01 ratio=1.284e-03 weight=2.86
+STATIONARY transport c=0.9999 alpha=1e-08 k=20 err=3.213e-04 bound=4.690e-01 ratio=6.851e-04 weight=4.63
+STATIONARY transport c=0.9999 alpha=1e-08 k=30 err=2.833e-06 bound=3.264e-03 ratio=8.678e-04 weight=4.63
+STATIONARY transport c=0.9999 alpha=1e-08 k=40 err=2.490e-08 bound=2.413e-05 ratio=1.032e-03 weight=4.63
+STATIONARY transport c=0.9999 alpha=1e-08 k=50 err=3.112e-10 bound=2.394e-07 ratio=1.300e-03 weight=4.63
+STATIONARY transport c=0.9999 alpha=1e-08 k=60 err=1.339e-10 bound=9.872e-09 ratio=1.356e-02 weight=4.69
+STATIONARY transport c=0.9999 alpha=1e-08 k=70 err=1.573e-10 bound=9.615e-09 ratio=1.636e-02 weight=4.70
+STATIONARY transport c=0.9999 alpha=1e-08 k=80 err=1.646e-10 bound=9.645e-09 ratio=1.706e-02 weight=4.72
+STATIONARY transport c=0.9999 alpha=1e-08 k=90 err=1.811e-10 bound=9.647e-09 ratio=1.877e-02 weight=4.73
+STATIONARY multistate gamma=0.5 k=20 err=1.741e-07 bound=9.091e-05 ratio=1.915e-03 weight=1.00
+STATIONARY multistate gamma=0.5 k=30 err=1.979e-11 bound=1.794e-09 ratio=1.103e-02 weight=1.00
+STATIONARY multistate gamma=0.5 k=40 err=8.431e-13 bound=5.195e-11 ratio=1.623e-02 weight=1.00
+STATIONARY multistate gamma=0.5 k=50 err=1.207e-13 bound=2.650e-11 ratio=4.557e-03 weight=1.00
+STATIONARY multistate gamma=0.5 k=60 err=1.029e-13 bound=3.094e-12 ratio=3.325e-02 weight=1.00
+STATIONARY multistate gamma=0.5 k=70 err=1.009e-13 bound=3.155e-12 ratio=3.198e-02 weight=1.00
+STATIONARY multistate gamma=0.5 k=80 err=1.065e-13 bound=3.924e-12 ratio=2.713e-02 weight=1.00
+STATIONARY multistate gamma=0.5 k=90 err=1.040e-13 bound=5.884e-12 ratio=1.767e-02 weight=1.00
+STATIONARY multistate gamma=0.9999 k=20 err=5.820e-05 bound=1.901e-01 ratio=3.062e-04 weight=2.03
+STATIONARY multistate gamma=0.9999 k=30 err=4.893e-08 bound=2.021e-04 ratio=2.421e-04 weight=2.24
+STATIONARY multistate gamma=0.9999 k=40 err=7.780e-09 bound=6.869e-05 ratio=1.133e-04 weight=2.24
+STATIONARY multistate gamma=0.9999 k=50 err=7.151e-10 bound=3.195e-06 ratio=2.238e-04 weight=2.24
+STATIONARY multistate gamma=0.9999 k=60 err=5.640e-10 bound=2.333e-06 ratio=2.418e-04 weight=2.24
+STATIONARY multistate gamma=0.9999 k=70 err=1.385e-10 bound=2.888e-07 ratio=4.796e-04 weight=2.24
+STATIONARY multistate gamma=0.9999 k=80 err=1.238e-10 bound=2.734e-07 ratio=4.528e-04 weight=2.24
+STATIONARY multistate gamma=0.9999 k=90 err=9.698e-11 bound=2.140e-07 ratio=4.533e-04 weight=2.24
+WELLPOSED transport c=0.5 alpha=0.5 scaled leja spaces=79 stationary failures=0 flow failures=0 min margin=1.166e+00 max||Ystar||=0.119 
+WELLPOSED transport c=0.5 alpha=0.5 scaled monotone spaces=79 stationary failures=0 flow failures=0 min margin=1.166e+00 max||Ystar||=0.119 
+WELLPOSED transport c=0.5 alpha=0.5 unscaled leja spaces=79 stationary failures=0 flow failures=0 min margin=1.050e+00 max||Ystar||=74.663 
+WELLPOSED transport c=0.5 alpha=0.5 unscaled monotone spaces=79 stationary failures=0 flow failures=0 min margin=1.050e+00 max||Ystar||=74.662 
+WELLPOSED transport c=0.9999 alpha=1e-08 scaled leja spaces=79 stationary failures=0 flow failures=0 min margin=1.732e-02 max||Ystar||=0.977 
+WELLPOSED transport c=0.9999 alpha=1e-08 scaled monotone spaces=79 stationary failures=0 flow failures=0 min margin=1.732e-02 max||Ystar||=0.977 
+WELLPOSED transport c=0.9999 alpha=1e-08 unscaled leja spaces=79 stationary failures=13 flow failures=0 min margin=2.523e-03 max||Ystar||=910.850 compare2020:branchCount
+WELLPOSED transport c=0.9999 alpha=1e-08 unscaled monotone spaces=79 stationary failures=2 flow failures=0 min margin=1.359e-02 max||Ystar||=894.778 compare2020:branchCount
+WELLPOSED multistate gamma=0.5 scaled leja spaces=7 stationary failures=0 flow failures=0 min margin=8.826e-01 max||Ystar||=0.135 
+WELLPOSED multistate gamma=0.5 scaled monotone spaces=7 stationary failures=0 flow failures=0 min margin=8.824e-01 max||Ystar||=0.135 
+WELLPOSED multistate gamma=0.5 unscaled leja spaces=7 stationary failures=0 flow failures=0 min margin=8.826e-01 max||Ystar||=0.181 
+WELLPOSED multistate gamma=0.5 unscaled monotone spaces=7 stationary failures=0 flow failures=0 min margin=8.824e-01 max||Ystar||=0.181 
+WELLPOSED multistate gamma=0.9999 scaled leja spaces=7 stationary failures=0 flow failures=0 min margin=4.318e-03 max||Ystar||=0.902 
+WELLPOSED multistate gamma=0.9999 scaled monotone spaces=7 stationary failures=0 flow failures=0 min margin=4.318e-03 max||Ystar||=0.902 
+WELLPOSED multistate gamma=0.9999 unscaled leja spaces=7 stationary failures=0 flow failures=0 min margin=4.317e-03 max||Ystar||=1.209 
+WELLPOSED multistate gamma=0.9999 unscaled monotone spaces=7 stationary failures=0 flow failures=0 min margin=4.317e-03 max||Ystar||=1.209 
+HISTORY transport k=50 nodes=181 max err/est (est>1e-11)=0.146
+HISTORY multistate k=34 nodes=124 max err/est (est>1e-11)=0.897
+                     denseCases: 24
+               wellposedRecords: 16
+                singleStateRows: 12
+                 multistateRows: 12
+                  evaluatorRows: 4
+    maxProjectionErrorOverBound: 0.9426
+
+Recorded-results audit passed (no solver rerun in this mode).
+Exported Tables 2--6 to [release]\reproduced\dense_20261111_201035_908\generated\tables
+Output directory: [release]\reproduced\dense_20261111_201035_908

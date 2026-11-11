@@ -1,0 +1,7 @@
+.DS_Store
+Thumbs.db
+reproduced/
+generated/
+results_scaled/**/reference_*.mat
+*.asv
+*_validation_console.log

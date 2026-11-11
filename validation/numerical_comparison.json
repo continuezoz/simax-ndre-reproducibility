@@ -1,0 +1,50 @@
+[
+  {
+    "mode": "dense",
+    "file": "bounds/dense_bounds.csv",
+    "rows": 24,
+    "changed_non_timing_fields": 0,
+    "max_relative_difference": 0,
+    "first_differences": []
+  },
+  {
+    "mode": "dense",
+    "file": "bounds/wellposed.csv",
+    "rows": 16,
+    "changed_non_timing_fields": 0,
+    "max_relative_difference": 0,
+    "first_differences": []
+  },
+  {
+    "mode": "dense",
+    "file": "bounds/stationary_bounds.csv",
+    "rows": 34,
+    "changed_non_timing_fields": 0,
+    "max_relative_difference": 0,
+    "first_differences": []
+  },
+  {
+    "mode": "dense",
+    "file": "bounds/history_transport.csv",
+    "rows": 181,
+    "changed_non_timing_fields": 0,
+    "max_relative_difference": 0,
+    "first_differences": []
+  },
+  {
+    "mode": "dense",
+    "file": "bounds/history_multistate.csv",
+    "rows": 124,
+    "changed_non_timing_fields": 0,
+    "max_relative_difference": 0,
+    "first_differences": []
+  },
+  {
+    "mode": "evaluators",
+    "file": "evaluator_comparison/transport_evaluators.csv",
+    "rows": 4,
+    "changed_non_timing_fields": 0,
+    "max_relative_difference": 0,
+    "first_differences": []
+  }
+]

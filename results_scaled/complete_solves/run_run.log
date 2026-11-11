@@ -1,0 +1,67 @@
+REFERENCE n=4000 refinement=1.290e-03
+COMPLETE n=4000 RKSM-Leja incremental-composed m=70 err=3.284e-10 rho=3.284e-03 time=2.300
+COMPLETE n=4000 RKSM-Leja radon-composed m=70 err=3.211e-10 rho=3.210e-03 time=2.356
+COMPLETE n=4000 EBA (published) BDF1, h=0.01 m=130 err=1.283e-01 rho=1.283e+06 time=7.180
+REFERENCE n=10000 refinement=5.895e-07
+COMPLETE n=10000 RKSM-Leja incremental-composed m=80 err=7.696e-10 rho=7.695e-03 time=4.688
+COMPLETE n=10000 RKSM-Leja radon-composed m=80 err=8.570e-10 rho=8.570e-03 time=4.084
+COMPLETE n=10000 EBA (published) BDF1, h=0.01 m=170 err=1.283e-01 rho=1.283e+06 time=17.126
+REFERENCE n=20000 refinement=1.762e-03
+COMPLETE n=20000 RKSM-Leja incremental-composed m=90 err=5.033e-09 rho=5.033e-02 time=5.408
+COMPLETE n=20000 RKSM-Leja radon-composed m=90 err=3.644e-09 rho=3.644e-02 time=5.651
+REFERENCE n=4000 refinement=1.290e-03
+COMPLETE n=4000 RKSM-Leja incremental-composed m=70 err=3.284e-10 rho=3.284e-03 time=2.587
+COMPLETE n=4000 RKSM-Leja radon-composed m=70 err=3.211e-10 rho=3.210e-03 time=2.244
+NEWTON max backward error 8.780e-12
+COMPLETE n=4000 EBA (published) BDF1, h=0.01 m=130 err=1.283e-01 rho=1.283e+06 time=7.033
+REFERENCE n=10000 refinement=5.895e-07
+COMPLETE n=10000 RKSM-Leja incremental-composed m=80 err=7.696e-10 rho=7.695e-03 time=3.598
+COMPLETE n=10000 RKSM-Leja radon-composed m=80 err=8.570e-10 rho=8.570e-03 time=3.732
+NEWTON max backward error 9.761e-12
+COMPLETE n=10000 EBA (published) BDF1, h=0.01 m=170 err=1.283e-01 rho=1.283e+06 time=16.460
+REFERENCE n=20000 refinement=1.762e-03
+COMPLETE n=20000 RKSM-Leja incremental-composed m=90 err=5.033e-09 rho=5.033e-02 time=5.552
+COMPLETE n=20000 RKSM-Leja radon-composed m=90 err=3.644e-09 rho=3.644e-02 time=5.733
+NEWTON max backward error 3.271e-11
+COMPLETE n=20000 EBA (published) BDF1, h=0.01 m=220 err=1.283e-01 rho=1.283e+06 time=244.845
+REFERENCE n=40000 refinement=6.683e-02
+REFERENCE n=4000 refinement=1.290e-03
+COMPLETE n=4000 RKSM-Leja incremental-composed m=70 err=3.284e-10 rho=3.284e-03 time=2.656
+COMPLETE n=4000 RKSM-Leja radon-composed m=70 err=3.211e-10 rho=3.210e-03 time=2.380
+NEWTON max backward error 8.780e-12
+COMPLETE n=4000 EBA (published) BDF1, h=0.01 m=130 err=1.283e-01 rho=1.283e+06 time=7.169
+REFERENCE n=10000 refinement=5.895e-07
+COMPLETE n=10000 RKSM-Leja incremental-composed m=80 err=7.696e-10 rho=7.695e-03 time=3.620
+COMPLETE n=10000 RKSM-Leja radon-composed m=80 err=8.570e-10 rho=8.570e-03 time=3.659
+NEWTON max backward error 9.761e-12
+COMPLETE n=10000 EBA (published) BDF1, h=0.01 m=170 err=1.283e-01 rho=1.283e+06 time=16.494
+REFERENCE n=20000 refinement=1.762e-03
+COMPLETE n=20000 RKSM-Leja incremental-composed m=90 err=5.033e-09 rho=5.033e-02 time=5.629
+COMPLETE n=20000 RKSM-Leja radon-composed m=90 err=3.644e-09 rho=3.644e-02 time=5.870
+NEWTON max backward error 3.271e-11
+COMPLETE n=20000 EBA (published) BDF1, h=0.01 m=220 err=1.283e-01 rho=1.283e+06 time=238.187
+REFERENCE n=40000 refinement=6.683e-02
+FLOOR n=40000 tau=1e-07 status=MAX_DIMENSION min ratio=2.340
+COMPLETE n=40000 RKSM-Leja incremental-composed m=90 err=9.454e-09 rho=9.454e-02 time=6.761
+COMPLETE n=40000 RKSM-Leja radon-composed m=90 err=2.126e-08 rho=2.126e-01 time=6.907
+REFERENCE n=4000 refinement=1.290e-03
+COMPLETE n=4000 RKSM-Leja incremental-composed m=70 err=3.284e-10 rho=3.284e-03 time=2.579
+COMPLETE n=4000 RKSM-Leja radon-composed m=70 err=3.211e-10 rho=3.210e-03 time=2.361
+NEWTON max backward error 8.780e-12
+COMPLETE n=4000 EBA (published) BDF1, h=0.01 m=130 err=1.283e-01 rho=1.283e+06 time=6.886
+REFERENCE n=10000 refinement=5.895e-07
+COMPLETE n=10000 RKSM-Leja incremental-composed m=80 err=7.696e-10 rho=7.695e-03 time=3.525
+COMPLETE n=10000 RKSM-Leja radon-composed m=80 err=8.570e-10 rho=8.570e-03 time=3.605
+NEWTON max backward error 9.761e-12
+COMPLETE n=10000 EBA (published) BDF1, h=0.01 m=170 err=1.283e-01 rho=1.283e+06 time=15.841
+REFERENCE n=20000 refinement=1.762e-03
+COMPLETE n=20000 RKSM-Leja incremental-composed m=90 err=5.033e-09 rho=5.033e-02 time=5.623
+COMPLETE n=20000 RKSM-Leja radon-composed m=90 err=3.644e-09 rho=3.644e-02 time=5.734
+NEWTON max backward error 3.271e-11
+COMPLETE n=20000 EBA (published) BDF1, h=0.01 m=220 err=1.283e-01 rho=1.283e+06 time=237.051
+REFERENCE n=40000 refinement=6.683e-02
+FLOOR n=40000 tau=1e-07 status=MAX_DIMENSION min ratio=2.340
+COMPLETE n=40000 RKSM-Leja incremental-composed m=90 err=9.454e-09 rho=9.454e-02 time=6.949
+COMPLETE n=40000 RKSM-Leja radon-composed m=90 err=2.126e-08 rho=2.126e-01 time=6.751
+NEWTON max backward error 1.464e-10
+COMPLETE n=40000 EBA (published) BDF1, h=0.01 m=270 err=1.283e-01 rho=1.283e+06 time=1397.270

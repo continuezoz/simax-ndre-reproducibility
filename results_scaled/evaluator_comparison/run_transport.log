@@ -1,0 +1,4 @@
+EVAL leja_bound_t7 m=70 centered err=3.885e-08@3.98e-08 rho=3.084e-01 time=0.3363
+EVAL leja_bound_t7 m=70 incremental-direct err=3.705e-10@9.50e-01 rho=3.705e-03 time=0.4247
+EVAL leja_bound_t7 m=70 incremental-composed err=3.284e-10@1.00e-01 rho=3.284e-03 time=0.1722
+EVAL leja_bound_t7 m=70 radon-composed err=3.211e-10@1.00e-01 rho=3.210e-03 time=0.2199
