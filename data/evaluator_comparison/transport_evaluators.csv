@@ -1,0 +1,5 @@
+space,dimension,method,maxRelativeError,peakTime,maxBudgetRatio,seconds,sylvesterResidual
+leja_bound_t7,70,centered,3.88528104819184e-08,3.98107170553497e-08,0.308388717939986,0.3362854,9.20584080115426e-09
+leja_bound_t7,70,incremental-direct,3.70529624673602e-10,0.95,0.00370521489679266,0.4247457,NaN
+leja_bound_t7,70,incremental-composed,3.28380415287939e-10,0.1,0.00328352786359099,0.1722229,NaN
+leja_bound_t7,70,radon-composed,3.21075604613919e-10,0.1,0.0032104859028962,0.2198884,NaN

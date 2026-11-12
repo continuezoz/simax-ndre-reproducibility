@@ -1,4 +1,0 @@
-Copyright (c) 2026 Ze Zhang and Jianzhou Liu.
-The authors make this code and data publicly accessible for inspection and
-reproduction of the reported experiments. A separate general-purpose
-open-source reuse license has not been specified for this release.

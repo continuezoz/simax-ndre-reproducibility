@@ -1,7 +1,9 @@
+reproduced/
+tables/
+data/**/reference_*.mat
+data/evaluator_comparison/*.mat
+*.log
+*.asv
 .DS_Store
 Thumbs.db
-reproduced/
-generated/
-results_scaled/**/reference_*.mat
-*.asv
-*_validation_console.log
+data/quadrature/*.mat
