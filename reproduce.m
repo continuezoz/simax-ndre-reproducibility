@@ -1,7 +1,7 @@
 function folder = reproduce(mode)
 %REPRODUCE Reproduce the numerical results of the paper.
 %   reproduce("check")       check the recorded results in data/
-%   reproduce("report")      write Tables 1-5 and Figures 1-2 from data/
+%   reproduce("report")      write Tables 1-5 and Figures 1-3 from data/
 %   reproduce("smoke")       run Algorithm 5.1 on two small problems
 %   reproduce("dense")       rerun Tables 1-2 and Figure 1 (n = 600)
 %   reproduce("evaluators")  rerun Table 5 (needs the transport reference)
@@ -64,9 +64,11 @@ switch mode
         run_all_experiments(600);
         plot_bound_history;
         plot_floor_traces;
+        plot_reflection_design;
     case "report"
         plot_bound_history;
         plot_floor_traces;
+        plot_reflection_design;
 end
 check_results;
 export_tables;

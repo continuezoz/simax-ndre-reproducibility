@@ -1,7 +1,8 @@
 function ps=ndre_setup(p)
-%NDRE_SETUP Scaled problem of section 2.1 and its constant nu, (3.2).
+%NDRE_SETUP Scaled problem of section 2.1, its constant nu, (3.2), and the
+% contraction constant nubar, (3.4), of the optimal shift.
 % Returns the problem structure of the scaled equation (scale_problem) with
-% the additional field nu. Supported families:
+% the additional fields nu and nubar. Supported families:
 %   "transport"   explicit scaling, nu from the secular equation;
 %   "multistate"  Lemma 2.1 with u = e and v = K\e, where
 %                 K = diag([k^-;k^+]) - U*V' has rank 4r; nu from the pencil
@@ -12,8 +13,8 @@ switch string(p.family)
     case "transport"
         c=0.9999; alpha=1e-8;
         if numel(p.parameter)==2, c=p.parameter(1); alpha=p.parameter(2); end
-        [piA,piD,nu]=transport_scaling(p.n,c,alpha);
-        ps=scale_problem(p,piA,piD); ps.nu=nu;
+        [piA,piD,nu,nubar]=transport_scaling(p.n,c,alpha);
+        ps=scale_problem(p,piA,piD); ps.nu=nu; ps.nubar=nubar;
     case "multistate"
         f=p.factors; n=p.n; r=size(f.F1,2); Z=zeros(n,r);
         dg=[f.km;f.kp];
@@ -25,7 +26,7 @@ switch string(p.family)
         ps=scale_problem(p,piA,piD);
         d=sqrt([piD;piA]); Uh=d.*U; Vh=V./d;      % Khat = diag(dg) - Uh*Vh'
         Gsolve=@(x)lowrank_solve(2*dg,[Uh,Vh],[Vh,Uh],x);
-        ps.nu=pencil_nu(Gsolve,n,n);
+        [ps.nu,ps.nubar]=pencil_nu(Gsolve,n,n);
     otherwise
         error('setup:family','No scaling implemented for %s.',p.family);
 end
@@ -36,10 +37,16 @@ function x=lowrank_solve(d,U,V,b)
 z=b./d; DU=U./d; x=z+DU*((eye(size(U,2))-V'*DU)\(V'*z));
 end
 
-function nu=pencil_nu(Gsolve,p,n)
-% 2*nu is the smallest modulus of the eigenvalues of G x = lambda J x.
+function [nu,nubar]=pencil_nu(Gsolve,p,n)
+% The eigenvalues of G\J are real, p positive and n negative; they are the
+% reciprocals of 2*mu, mu the eigenvalues of J*G/2. nu = min(mu+,-mu-) and
+% nubar = (mu+ - mu-)/2, with mu+ (mu-) the eigenvalue of J*G/2 closest to
+% zero from the right (left).
 J=[ones(p,1);-ones(n,1)];
 opts=struct('tol',1e-12,'maxit',500,'issym',false);
-theta=eigs(@(x)Gsolve(J.*x),p+n,2,'largestabs',opts);
-nu=1/(2*max(abs(theta)));
+op=@(x)Gsolve(J.*x);
+tp=eigs(op,p+n,1,'largestreal',opts); tn=eigs(op,p+n,1,'smallestreal',opts);
+mup=1/(2*real(tp)); mun=1/(2*real(tn));
+assert(mup>0 && mun<0,'setup:pencil','Pencil eigenvalues have the wrong signs.');
+nu=min(mup,-mun); nubar=(mup-mun)/2;
 end

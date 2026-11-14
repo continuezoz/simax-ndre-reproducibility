@@ -3,7 +3,7 @@ function run_bound_experiments(stage,n)
 % 6.2, on problems small enough for a dense full-order reference.
 %   "dense"       Algorithm 5.1 for tau = 1e-4,...,1e-9: accepted dimensions,
 %                 true error against the target and against the estimate.
-%   "stationary"  ||Xstar - V*Ystar*W'||_F and the bound omega/(2*nu) of
+%   "stationary"  ||Xstar - V*Ystar*W'||_F and the bound omega/(2*nubar) of
 %                 Theorem 4.2 for growing spaces.
 %   "wellposed"   every candidate space up to dimension 80: failures of the
 %                 stationary solve and of the flow evaluation, closed-loop
@@ -61,7 +61,7 @@ for c=cases
         % Compare only where the estimate is above the rounding level of
         % the reference and of the evaluator.
         big=find(e.epsilon>1e-11); ratio=err(big)./e.epsilon(big); [m,jm]=max(ratio);
-        row=struct('case',c.label,'n',p.n,'nu',p.nu,'fullMargin',fp.minClosedLoopRealPart, ...
+        row=struct('case',c.label,'n',p.n,'nu',p.nu,'nubar',p.nubar,'fullMargin',fp.minClosedLoopRealPart, ...
             'tau',tau,'status',r.status,'k',size(r.V,2),'ell',size(r.W,2),'nodes',q-1, ...
             'errorOverTarget',max(err./(1e-12+tau*refn)),'errorOverEstimateMax',m, ...
             'timeAtMax',r.nodes(big(jm)),'estimateAtMax',e.epsilon(big(jm)), ...
@@ -96,8 +96,8 @@ for c=cases
         left=@(M) M+U*(g.*(U'*M)); right=@(M) M+((M*Z).*g')*Z';
         omega=sqrt(norm(right(left(N)),'fro')^2+norm(right(RA*Y),'fro')^2+norm(left(Y*RD'),'fro')^2);
         plain=sqrt(norm(N,'fro')^2+norm(RA*Y,'fro')^2+norm(Y*RD','fro')^2);
-        err=norm(Xstar-V*Y*W','fro'); bound=omega/(2*p.nu);
-        row=struct('case',c.label,'n',p.n,'nu',p.nu,'k',k,'norm2Ystar',max(sv), ...
+        err=norm(Xstar-V*Y*W','fro'); bound=omega/(2*p.nubar);
+        row=struct('case',c.label,'n',p.n,'nu',p.nu,'nubar',p.nubar,'k',k,'norm2Ystar',max(sv), ...
             'norm2Xstar',norm(Xstar),'error',err,'bound',bound,'errorOverBound',err/bound, ...
             'weightedOverPlainResidual',omega/plain,'relativeError',err/norm(Xstar,'fro'));
         rows=[rows;row]; %#ok<AGROW>

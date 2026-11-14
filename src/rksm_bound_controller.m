@@ -9,9 +9,10 @@ function r=rksm_bound_controller(a,p,tauA,tau,o,shifts)
 % Candidate spaces are tested when the left dimension reaches a multiple
 % of o.checkDimension (every block if o.checkDimension is 0). Dependent
 % directions of a new block are deflated by pivoted QR. X0 = 0.
+% The estimate uses the contraction constant p.nubar of the optimal shift.
 % r.basisSeconds and r.checkSeconds split the time between basis expansion
 % and the tests of candidate spaces.
-timer=tic; nu=p.nu; lo=.01/max(abs(shifts));
+timer=tic; nu=p.nubar; lo=.01/max(abs(shifts));
 q=ceil(log(o.tf/lo)/log(1.1)); nodes=[0,logspace(log10(lo),log10(o.tf),q+1)];
 [V,nv]=append(zeros(p.n,0),p.F); [W,nw]=append(zeros(p.p,0),p.G);
 trace=table('Size',[0 6],'VariableTypes',repmat({'double'},1,6), ...
