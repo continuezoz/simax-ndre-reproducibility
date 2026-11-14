@@ -27,7 +27,7 @@ for level=[0.5 0.9 0.99]
 end
 set(ax,'XScale','log','FontSize',8,'Box','on');
 xlim(ax,[1e-4 max(tfs)]); ylim(ax,[0 1.02]); grid(ax,'on'); ax.GridAlpha=0.15; ax.MinorGridAlpha=0.05;
-xlabel(ax,'rod length x'); ylabel(ax,'a(x) / a(\infty)');
+xlabel(ax,'rod length x'); ylabel(ax,'albedo ratio');
 title(ax,'(a) albedo','FontWeight','normal','FontSize',8.5);
 % (b) design lengths
 ax=nexttile(tl); hold(ax,'on');
@@ -39,8 +39,8 @@ for i=1:3
 end
 set(ax,'YScale','log','FontSize',8,'Box','on');
 xlim(ax,[0.3 1]); grid(ax,'on'); ax.GridAlpha=0.15; ax.MinorGridAlpha=0.05;
-xlabel(ax,'fraction p'); ylabel(ax,'relative error / half-width of x_p');
-title(ax,'(b) design length x_p','FontWeight','normal','FontSize',8.5);
+xlabel(ax,'fraction \theta'); ylabel(ax,'relative error / half-width of x_\theta');
+title(ax,'(b) design length x_\theta','FontWeight','normal','FontSize',8.5);
 % legends: colours (gamma) in panel (a), line styles (methods) in panel (b)
 gray=[0.4 0.4 0.4];
 h=gobjects(3,1);
