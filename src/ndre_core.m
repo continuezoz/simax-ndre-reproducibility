@@ -318,15 +318,19 @@ for j = 1:steps
     base = Y;
     h = opts.h;
     Yn = Y;
+    prevRes = inf;
     for it = 1:opts.newtonMax
         f = -red.A*Yn - Yn*red.D + Yn*red.S*Yn + Q;
         G = Yn - base - h*f;
+        res = norm(G,'fro');
         scale = norm(Yn,'fro')+norm(base,'fro')+h*( ...
             norm(red.A*Yn,'fro')+norm(Yn*red.D,'fro')+ ...
             norm(Yn*red.S*Yn,'fro')+norm(Q,'fro'));
-        if norm(G,'fro') <= opts.newtonTol*max(scale,eps)
+        if res <= opts.newtonTol*max(scale,eps) || ...
+                (it > 1 && res >= 0.5*prevRes && res <= 100*opts.newtonTol*max(scale,eps))
             break
         end
+        prevRes = res;
         % Newton step: split the identity evenly between the two
         % Sylvester coefficients.
         J = 0.5*eye(k) + h*(red.A-Yn*red.S);
